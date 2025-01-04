@@ -1,6 +1,7 @@
 package com.kenanbabicipia.example;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -19,6 +20,12 @@ public class SuperAdminWindow {
 
     public SuperAdminWindow(Employee employee) {
         welcomeLabel.setText(welcomeLabel.getText() + " " + employee.getFirstName() + " " + employee.getLastName());
+        addLabel.setIcon(new ImageIcon(new ImageIcon("C:\\Users\\Kenan\\IdeaProjects\\EmployeeAttendanceSystemMySQL\\src\\assets\\addUser.png").getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH)));
+        removeLabel.setIcon(new ImageIcon(new ImageIcon("C:\\Users\\Kenan\\IdeaProjects\\EmployeeAttendanceSystemMySQL\\src\\assets\\removeUser.png").getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH)));
+        changeLabel.setIcon(new ImageIcon(new ImageIcon("C:\\Users\\Kenan\\IdeaProjects\\EmployeeAttendanceSystemMySQL\\src\\assets\\edit.png").getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH)));
+
+
+
         logOutButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -35,6 +42,22 @@ public class SuperAdminWindow {
             public void actionPerformed(ActionEvent e) {
                 NewEmployeeWindow newEmployeeWindow = new NewEmployeeWindow(employee);
                 newEmployeeWindow.showAddNewWindow(employee);
+                SwingUtilities.getWindowAncestor(adminPanel).dispose();
+            }
+        });
+        removeEmployeeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                RemoveEmployeeWindow removeEmployeeWindow = new RemoveEmployeeWindow(employee);
+                removeEmployeeWindow.showRemoveEmployeeWindow(employee);
+                SwingUtilities.getWindowAncestor(adminPanel).dispose();
+            }
+        });
+        changeInformationButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ChangeInformationWindow changeInformationWindow = new ChangeInformationWindow(employee);
+                changeInformationWindow.showChangeWindow(employee);
                 SwingUtilities.getWindowAncestor(adminPanel).dispose();
             }
         });

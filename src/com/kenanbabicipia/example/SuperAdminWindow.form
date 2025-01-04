@@ -33,7 +33,7 @@
           <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Label"/>
+          <text value=""/>
         </properties>
       </component>
       <component id="40d86" class="javax.swing.JButton" binding="removeEmployeeButton" default-binding="true">
@@ -49,7 +49,7 @@
           <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Label"/>
+          <text value=""/>
         </properties>
       </component>
       <component id="26892" class="javax.swing.JButton" binding="changeInformationButton" default-binding="true">
@@ -65,7 +65,7 @@
           <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Label"/>
+          <text value=""/>
         </properties>
       </component>
       <component id="cb32f" class="javax.swing.JButton" binding="logOutButton" default-binding="true">

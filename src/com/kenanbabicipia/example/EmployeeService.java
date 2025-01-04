@@ -56,13 +56,13 @@ public class EmployeeService {
     }
 
     public Employee selectEmployeeInformation(int employeeID){
-        String query = "SELECT employeeID, firstName, lastName, email, role FROM employee WHERE employeeID = ?";
+        String query = "SELECT employeeID, firstName, lastName, email, phoneNumber, role, username FROM employee WHERE employeeID = ?";
         try{
             PreparedStatement preparedStatementSelect = SQLController.getInstance().getConnection().prepareStatement(query);
             preparedStatementSelect.setInt(1, employeeID);
             ResultSet resultset = preparedStatementSelect.executeQuery();
             if (resultset.next()) {
-                Employee employee = new Employee(resultset.getInt("employeeID"), resultset.getString("firstName"), resultset.getString("lastName"), resultset.getString("email"), resultset.getString("role"));
+                Employee employee = new Employee(resultset.getInt("employeeID"), resultset.getString("firstName"), resultset.getString("lastName"), resultset.getString("email"), resultset.getString("phoneNumber"), resultset.getString("role"), resultset.getString("username"));
                 return employee;
             }
         }catch(SQLException e){
