@@ -19,7 +19,7 @@ public class ReportWindow {
     private JButton generateReportInPDFButton;
     private JLabel selectedLabel;
     private JFormattedTextField employeeIDField;
-    private JFormattedTextField formattedTextField1;
+    private JFormattedTextField monthField;
     private JLabel monthLabel;
     private ActivityService activityService = new ActivityService();
 
@@ -35,13 +35,23 @@ public class ReportWindow {
         searchButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                selectedLabel.setText("Selected Employee: ");
+                if(employeeIDField.getText().equals("")){
+                    selectedLabel.setText(selectedLabel.getText() + "No Employee ID entered! Try again!");
+                    DefaultTableModel model = (DefaultTableModel) activityTable.getModel();
+                    model.setRowCount(0);
+                    generateReportInPDFButton.setEnabled(false);
+                    return;
+                }
                 int employeeID = parseInt(employeeIDField.getText());
                 EmployeeService employeeService = new EmployeeService();
+
                 Employee selectedEmployee = employeeService.selectEmployeeInformation(employeeID);
-                selectedLabel.setText("Selected Employee: ");
                 if(selectedEmployee != null){
                     selectedLabel.setText(selectedLabel.getText() + selectedEmployee.getFirstName() + " " + selectedEmployee.getLastName() + ", Role: " + selectedEmployee.getRole());
-                    fillReportTable(selectedEmployee.getEmployeeID());
+                    if(monthField.equals("")) fillReportTable(selectedEmployee.getEmployeeID(), monthField.getText());
+                    else fillReportTable(selectedEmployee.getEmployeeID(), monthField.getText());
+                    generateReportInPDFButton.setEnabled(true);
                 }
                 else{
                     selectedLabel.setText(selectedLabel.getText() + "There is no Employee with entered ID! Try again!");
@@ -50,10 +60,16 @@ public class ReportWindow {
         });
     }
 
-    private void fillReportTable(int employeID){
+    private void fillReportTable(int employeID, String month){
         DefaultTableModel model = (DefaultTableModel) activityTable.getModel();
+        model.setRowCount(0);
         model.setColumnIdentifiers(new Object[]{"EmployeeID", "Date", "Log-in Time", "Log-out Time", "Work Time"});
-        List<Activity> activities = activityService.selectAllActivities(employeID);
+        List<Activity> activities;
+
+        if(month.equals(""))
+            activities = activityService.selectAllActivities(employeID);
+        else
+            activities = activityService.selectAllActivities(employeID, month);
 
         for(Activity activity : activities){
             model.addRow(new Object[]{

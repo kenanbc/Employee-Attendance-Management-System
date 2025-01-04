@@ -73,6 +73,27 @@ public class ActivityService {
         return activities;
     }
 
+    public List<Activity> selectAllActivities(int employeeID, String month){
+        List<Activity> activities = new ArrayList<>();
+        String query = "SELECT employeeID, date, login, logout, totalWork FROM activity WHERE employeeID = ? AND SUBSTRING(date, 4, 2) = ?";
+        if(month.length() == 1) month = "0".concat(month);
+        try{
+            sqlController.connect();
+            PreparedStatement preparedStatement = sqlController.getConnection().prepareStatement(query);
+            preparedStatement.setInt(1, employeeID);
+            preparedStatement.setString(2, month);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()){
+                Activity activity = new Activity(resultSet.getInt("employeeID"), resultSet.getString("date"), resultSet.getTime("login"), resultSet.getTime("logout"), resultSet.getString("totalWork"));
+                activities.add(activity);
+            }
+            return activities;
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return activities;
+    }
+
     public void updateLogOut(int employeeID){
         String querySelect = "SELECT login FROM activity WHERE employeeID = ? AND logout IS NULL";
         String queryUpdate = "UPDATE activity SET logout = ?, totalWork = ? WHERE employeeID = ? AND logout IS NULL";

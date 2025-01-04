@@ -43,6 +43,16 @@ public class Employee {
         this.role = role;
     }
 
+    public Employee( String firstName, String lastName, String email, String phoneNumber, String role, String username, String password){
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.role = role;
+        this.username = username;
+        this.password = password;
+    }
+
     public int getEmployeeID() {
         return employeeID;
     }

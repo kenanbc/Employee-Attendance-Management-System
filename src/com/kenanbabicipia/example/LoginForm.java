@@ -53,8 +53,8 @@ public class LoginForm {
                                 break;
 
                             case "Superadmin":
-                                //SuperAdminWindow superAdminWindow = new SuperAdminWindow(user);
-                                //frame.setContentPane(superAdminWindow.getSuperAdminPanel());
+                                SuperAdminWindow superAdminWindow = new SuperAdminWindow(employee);
+                                superAdminWindow.showSuperAdminWindow(employee);
                                 break;
 
                             default:
