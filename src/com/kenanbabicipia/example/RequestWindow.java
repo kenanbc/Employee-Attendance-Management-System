@@ -33,7 +33,7 @@ public class RequestWindow {
             @Override
             public void windowClosing(WindowEvent e){
                 ActivityService activityService = new ActivityService();
-                Boolean shouldClose = activityService.closingLogOut(requestPanel, employee.getEmployeeID());
+                boolean shouldClose = activityService.closingLogOut(requestPanel, employee.getEmployeeID());
                 if(shouldClose){
                     frame.dispose();
                 }

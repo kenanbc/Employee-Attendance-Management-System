@@ -77,6 +77,7 @@ public class ActivityService {
         List<Activity> activities = new ArrayList<>();
         String query = "SELECT employeeID, date, login, logout, totalWork FROM activity WHERE employeeID = ? AND SUBSTRING(date, 4, 2) = ?";
         if(month.length() == 1) month = "0".concat(month);
+        if(month.length() > 2) return null;
         try{
             sqlController.connect();
             PreparedStatement preparedStatement = sqlController.getConnection().prepareStatement(query);

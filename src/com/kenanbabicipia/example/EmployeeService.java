@@ -12,7 +12,6 @@ import java.util.List;
 
 public class EmployeeService {
 
-
     public Employee verifyLogIn(String username, String password) throws SQLException{
 
         Connection connection = SQLController.getInstance().getConnection();
@@ -69,6 +68,46 @@ public class EmployeeService {
             e.printStackTrace();
         }
         return null;
+    }
+
+
+    public List<Employee> selectAllEmployees(){
+        List<Employee> employees = new ArrayList<>();
+        String query = "SELECT employeeID, firstName, lastName, email, phoneNumber, role, username FROM employee";
+        try{
+            PreparedStatement preparedStatementSelect = SQLController.getInstance().getConnection().prepareStatement(query);
+            ResultSet resultset = preparedStatementSelect.executeQuery();
+            while(resultset.next()){
+                Employee employee = new Employee(resultset.getInt("employeeID"), resultset.getString("firstName"), resultset.getString("lastName"), resultset.getString("email"), resultset.getString("phoneNumber"), resultset.getString("role"), resultset.getString("username"));
+                employees.add(employee);
+            }
+            return employees;
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return employees;
+    }
+
+    public void updateEmployeeInformation(Employee employee){
+        String query = "UPDATE employee SET firstName = ?, lastName = ?, email = ?, phoneNumber = ?, role = ?, username = ? WHERE employeeID = ?";
+
+
+        try{
+          PreparedStatement preparedStatement = SQLController.getInstance().getConnection().prepareStatement(query);
+          preparedStatement.setString(1, employee.getFirstName());
+          preparedStatement.setString(2, employee.getLastName());
+          preparedStatement.setString(3, employee.getEmail());
+          preparedStatement.setString(4, employee.getPhoneNumber());
+          preparedStatement.setString(5, employee.getRole());
+          preparedStatement.setString(6, employee.getUsername());
+          preparedStatement.setInt(7, employee.getEmployeeID());
+
+          preparedStatement.executeUpdate();
+
+        } catch(SQLException e){
+            e.printStackTrace();
+        }
+
     }
 
 }

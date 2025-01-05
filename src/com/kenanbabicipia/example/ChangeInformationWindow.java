@@ -21,9 +21,9 @@ public class ChangeInformationWindow {
     private JTextField emailField;
     private JTextField numberField;
     private JTextField usernameField;
-    private JTextField passwordField;
     private JComboBox<String> roleOptions;
     private JButton saveChangesButton;
+    private JLabel successLabel;
 
     public ChangeInformationWindow(Employee employee) {
 
@@ -41,15 +41,10 @@ public class ChangeInformationWindow {
         searchButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                successLabel.setVisible(false);
                 if(employeeIDField.getText().equals("")){
-                    nameField.setText("");
-                    lastNameField.setText("");
-                    emailField.setText("");
-                    numberField.setText("");
-                    usernameField.setText("");
-                    roleOptions.setSelectedItem("");
-                    saveChangesButton.setEnabled(false);
+                    emptyForm();
+                    chanegeStateForm(false);
                     return;
                 }
                 int employeeID = parseInt(employeeIDField.getText());
@@ -59,11 +54,21 @@ public class ChangeInformationWindow {
 
                 if(selectedEmployee != null){
                     fillSelectedFields(selectedEmployee.getEmployeeID());
-                    saveChangesButton.setEnabled(true);
                 }
                 else{
-                    saveChangesButton.setEnabled(false);
+                    emptyForm();
+                    chanegeStateForm(false);
                 }
+            }
+        });
+        saveChangesButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                EmployeeService employeeService = new EmployeeService();
+                Employee selectedEmployee = getChanges();
+                employeeService.updateEmployeeInformation(selectedEmployee);
+                chanegeStateForm(false);
+                successLabel.setVisible(true);
             }
         });
     }
@@ -79,14 +84,39 @@ public class ChangeInformationWindow {
         usernameField.setText(selectedEmployee.getUsername());
         roleOptions.setSelectedItem(selectedEmployee.getRole());
 
-        nameField.setEnabled(true);
-        lastNameField.setEnabled(true);
-        emailField.setEnabled(true);
-        numberField.setEnabled(true);
-        usernameField.setEnabled(true);
-        passwordField.setEnabled(true);
-        roleOptions.setEnabled(true);
+        chanegeStateForm(true);
 
+    }
+
+    private Employee getChanges(){
+        int employeeID = parseInt(employeeIDField.getText());
+        String firstName = nameField.getText();
+        String lastName = lastNameField.getText();
+        String email = emailField.getText();
+        String number = numberField.getText();
+        String username = usernameField.getText();
+        String role = (String) roleOptions.getSelectedItem();
+        Employee changedEmployee = new Employee(employeeID, firstName, lastName, email, number, role, username);
+        return changedEmployee;
+    }
+
+    private void chanegeStateForm(boolean state){
+        nameField.setEnabled(state);
+        lastNameField.setEnabled(state);
+        emailField.setEnabled(state);
+        numberField.setEnabled(state);
+        usernameField.setEnabled(state);
+        roleOptions.setEnabled(state);
+        saveChangesButton.setEnabled(state);
+    }
+
+    private void emptyForm(){
+        nameField.setText("");
+        lastNameField.setText("");
+        emailField.setText("");
+        numberField.setText("");
+        usernameField.setText("");
+        roleOptions.setSelectedItem("");
     }
 
 

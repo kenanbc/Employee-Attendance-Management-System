@@ -23,12 +23,17 @@ public class EmployeeActivityWindow {
 
     public EmployeeActivityWindow(Employee employee){
         this.employeeService = new EmployeeService();
-        fillTable();
+        fillTable(employee.getRole(), employee.getEmployeeID());
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ManagerWindow managerWindow = new ManagerWindow(employee);
-                managerWindow.showManagerWindow(employee);
+                if(employee.getRole().equals("Manager")){
+                    ManagerWindow managerWindow = new ManagerWindow(employee);
+                    managerWindow.showManagerWindow(employee);
+                }else if(employee.getRole().equals("Employee")){
+                    EmployeeWindow employeeWindow = new EmployeeWindow(employee);
+                    employeeWindow.showEmployeeWindow(employee);
+                }
                 SwingUtilities.getWindowAncestor(activityPanel).dispose();
             }
         });
@@ -56,10 +61,16 @@ public class EmployeeActivityWindow {
         frame.setVisible(true);
     }
 
-    private void fillTable(){
+    private void fillTable(String role, int employeeID){
         DefaultTableModel model = (DefaultTableModel) activityTable.getModel();
         model.setColumnIdentifiers(new Object[]{"EmployeeID", "Date", "Work Time", "Log-in Time", "Log-out Time"});
-        List<Activity> activities = activityService.selectAllActivities();
+
+        List<Activity> activities;
+
+        if(role.equals("Manager"))
+            activities = activityService.selectAllActivities();
+        else
+            activities = activityService.selectAllActivities(employeeID);
 
         for(Activity activity : activities){
             model.addRow(new Object[]{

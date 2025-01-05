@@ -1,10 +1,12 @@
 package com.kenanbabicipia.example;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.List;
 
 public class RemoveEmployeeWindow {
     private JTable previewEmployee;
@@ -13,7 +15,10 @@ public class RemoveEmployeeWindow {
     private JPanel removePanel;
     private JLabel selectedEmployee;
 
+    EmployeeService employeeService = new EmployeeService();
+
     public RemoveEmployeeWindow(Employee employee) {
+        fillTable();
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -22,6 +27,24 @@ public class RemoveEmployeeWindow {
                 SwingUtilities.getWindowAncestor(removePanel).dispose();
             }
         });
+    }
+
+    private void fillTable(){
+        DefaultTableModel model = (DefaultTableModel) previewEmployee.getModel();
+        model.setColumnIdentifiers(new Object[]{"EmployeeID", "First Name", "Last Name", "E-mail", "Phone Number", "Role", "Username"});
+        List<Employee> employees  = employeeService.selectAllEmployees();
+
+        for(Employee employee : employees){
+            model.addRow(new Object[]{
+                    employee.getEmployeeID(),
+                    employee.getFirstName(),
+                    employee.getLastName(),
+                    employee.getEmail(),
+                    employee.getPhoneNumber(),
+                    employee.getRole(),
+                    employee.getUsername()
+            });
+        }
     }
 
     public void showRemoveEmployeeWindow(Employee employee){
