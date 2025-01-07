@@ -1,35 +1,42 @@
-package com.kenanbabicipia.example;
-
-import java.sql.Time;
+package com.kenanbabicipia.example.model;
 
 public class Request {
     private int requestID;
-    private Time startDate;
-    private Time endDate;
+    private int employeeID;
+    private String startDate;
+    private String endDate;
     private String description;
 
-    public Request(int requestID, Time startDate, Time endDate, String description) {
-        this.requestID = requestID;
+    public Request(int employeeID, String startDate, String endDate, String description) {
+        this.employeeID = employeeID;
         this.startDate = startDate;
         this.endDate = endDate;
         this.description = description;
     }
 
-    public Request(Time startDate, Time endDate, String description) {
+    public Request(String startDate, String endDate, String description) {
         this.startDate = startDate;
         this.endDate = endDate;
         this.description = description;
+    }
+
+    public int getEmployeeID() {
+        return employeeID;
+    }
+
+    public void setEmployeeID(int employeeID) {
+        this.employeeID = employeeID;
     }
 
     public int getRequestID() {
         return requestID;
     }
 
-    public Time getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
 
-    public Time getEndDate() {
+    public String getEndDate() {
         return endDate;
     }
 
@@ -41,11 +48,11 @@ public class Request {
         this.requestID = requestID;
     }
 
-    public void setStartDate(Time startDate) {
+    public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
 
-    public void setEndDate(Time endDate) {
+    public void setEndDate(String endDate) {
         this.endDate = endDate;
     }
 

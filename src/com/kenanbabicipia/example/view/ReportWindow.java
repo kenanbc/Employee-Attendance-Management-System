@@ -1,4 +1,10 @@
-package com.kenanbabicipia.example;
+package com.kenanbabicipia.example.view;
+
+import com.kenanbabicipia.example.model.Activity;
+import com.kenanbabicipia.example.model.Employee;
+import com.kenanbabicipia.example.model.PDFGenerator;
+import com.kenanbabicipia.example.service.ActivityService;
+import com.kenanbabicipia.example.service.EmployeeService;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -21,7 +27,8 @@ public class ReportWindow {
     private JFormattedTextField employeeIDField;
     private JFormattedTextField monthField;
     private JLabel monthLabel;
-    private ActivityService activityService = new ActivityService();
+    private final ActivityService activityService = new ActivityService();
+    private Employee selectedEmployee;
 
     public ReportWindow(Employee employee) {
         backButton.addActionListener(new ActionListener() {
@@ -46,7 +53,7 @@ public class ReportWindow {
                 int employeeID = parseInt(employeeIDField.getText());
                 EmployeeService employeeService = new EmployeeService();
 
-                Employee selectedEmployee = employeeService.selectEmployeeInformation(employeeID);
+                selectedEmployee = employeeService.selectEmployeeInformation(employeeID);
                 if(selectedEmployee != null){
                     selectedLabel.setText(selectedLabel.getText() + selectedEmployee.getFirstName() + " " + selectedEmployee.getLastName() + ", Role: " + selectedEmployee.getRole());
                     if(monthField.equals("")) fillReportTable(selectedEmployee.getEmployeeID(), monthField.getText());
@@ -58,18 +65,37 @@ public class ReportWindow {
                 }
             }
         });
+        generateReportInPDFButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                PDFGenerator pdfGenerator = new PDFGenerator();
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setDialogTitle("Save PDF");
+
+                if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+                    String filePath = fileChooser.getSelectedFile().getAbsolutePath() + ".pdf";
+                    pdfGenerator.generatePDF(activityTable, filePath, selectedEmployee.getFirstName(), selectedEmployee.getLastName(), selectedEmployee.getRole(), monthField.getText());
+                }
+            }
+        });
     }
 
-    private void fillReportTable(int employeID, String month){
+    private void fillReportTable(int employeeID, String month){
+        activityTable.setModel(new DefaultTableModel(){
+            @Override
+            public boolean isCellEditable(int row, int column){
+                return false;
+            }
+        });
         DefaultTableModel model = (DefaultTableModel) activityTable.getModel();
         model.setRowCount(0);
         model.setColumnIdentifiers(new Object[]{"EmployeeID", "Date", "Log-in Time", "Log-out Time", "Work Time"});
         List<Activity> activities;
 
         if(month.equals(""))
-            activities = activityService.selectAllActivities(employeID);
+            activities = activityService.selectAllActivities(employeeID);
         else
-            activities = activityService.selectAllActivities(employeID, month);
+            activities = activityService.selectAllActivities(employeeID, month);
 
         for(Activity activity : activities){
             model.addRow(new Object[]{

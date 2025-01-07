@@ -1,9 +1,9 @@
-package com.kenanbabicipia.example;
+package com.kenanbabicipia.example.service;
 
-import com.mysql.cj.protocol.Resultset;
+import com.kenanbabicipia.example.controller.SQLController;
+import com.kenanbabicipia.example.model.Activity;
 
 import javax.swing.*;
-import java.awt.event.WindowEvent;
 import java.sql.*;
 import java.time.Duration;
 import java.time.LocalTime;
@@ -135,6 +135,25 @@ public class ActivityService {
         }
     }
 
+    public String calculateTotalTime(JTable table, int columnIndex) {
+        int totalMinutes = 0;
+
+        for (int row = 0; row < table.getRowCount(); row++) {
+            String time = (String) table.getValueAt(row, columnIndex);
+            if (time != null && !time.isEmpty()) {
+                String[] parts = time.split(":");
+                int hours = Integer.parseInt(parts[0]);
+                int minutes = Integer.parseInt(parts[1]);
+                totalMinutes += hours * 60 + minutes;
+            }
+        }
+
+        int totalHours = totalMinutes / 60;
+        int remainingMinutes = totalMinutes % 60;
+
+        return String.format("%02d:%02d", totalHours, remainingMinutes);
+    }
+
 
     public boolean closingLogOut(JPanel activePanel, int employeeID){
         int confirmation = JOptionPane.showConfirmDialog(activePanel, "Would you like to close app?","Warning!", JOptionPane.YES_NO_OPTION);
@@ -144,4 +163,5 @@ public class ActivityService {
         }
         else return false;
     }
+
 }

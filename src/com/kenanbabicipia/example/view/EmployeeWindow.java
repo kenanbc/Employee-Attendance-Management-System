@@ -1,4 +1,8 @@
-package com.kenanbabicipia.example;
+package com.kenanbabicipia.example.view;
+
+import com.kenanbabicipia.example.controller.Style;
+import com.kenanbabicipia.example.model.Employee;
+import com.kenanbabicipia.example.service.ActivityService;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,10 +19,12 @@ public class EmployeeWindow {
     private JButton logOutButton;
     private JLabel activityLabel;
     private JLabel requestLabel;
+    private JButton themeButton;
 
     public EmployeeWindow(Employee employee) {
 
         welcomeLabel.setText(welcomeLabel.getText() + " " + employee.getFirstName() + " " + employee.getLastName());
+        Style.setDefaultTitleFont(welcomeLabel);
 
         activityLabel.setIcon(new ImageIcon(new ImageIcon("C:\\Users\\Kenan\\IdeaProjects\\EmployeeAttendanceSystemMySQL\\src\\assets\\activity.png").getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH)));
         requestLabel.setIcon(new ImageIcon(new ImageIcon("C:\\Users\\Kenan\\IdeaProjects\\EmployeeAttendanceSystemMySQL\\src\\assets\\request.png").getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH)));
@@ -49,6 +55,12 @@ public class EmployeeWindow {
                 EmployeeActivityWindow employeeActivityWindow = new EmployeeActivityWindow(employee);
                 employeeActivityWindow.showEmployeeActivityWindow(employee);
                 SwingUtilities.getWindowAncestor(employeePanel).dispose();
+            }
+        });
+        themeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Style.switchTheme(e);
             }
         });
     }

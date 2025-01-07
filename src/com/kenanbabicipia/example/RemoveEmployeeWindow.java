@@ -1,12 +1,19 @@
 package com.kenanbabicipia.example;
 
+import com.kenanbabicipia.example.model.Employee;
+import com.kenanbabicipia.example.service.ActivityService;
+import com.kenanbabicipia.example.service.EmployeeService;
+import com.kenanbabicipia.example.view.NewEmployeeWindow;
+import com.kenanbabicipia.example.view.SuperAdminWindow;
+
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.util.List;
+
+import static java.lang.Integer.parseInt;
 
 public class RemoveEmployeeWindow {
     private JTable previewEmployee;
@@ -14,17 +21,34 @@ public class RemoveEmployeeWindow {
     private JButton removeSelectedButton;
     private JPanel removePanel;
     private JLabel selectedEmployee;
+    private JTextField employeeIDField;
+    private JLabel errorLabel;
 
     EmployeeService employeeService = new EmployeeService();
 
+
     public RemoveEmployeeWindow(Employee employee) {
         fillTable();
+        employeeIDField.getDocument().addDocumentListener(new FormValidationListener());
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 SuperAdminWindow adminWindow = new SuperAdminWindow(employee);
                 adminWindow.showSuperAdminWindow(employee);
                 SwingUtilities.getWindowAncestor(removePanel).dispose();
+            }
+        });
+        employeeIDField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                super.keyTyped(e);
+                employeeIDField.getDocument().addDocumentListener(new FormValidationListener());
+            }
+        });
+        removeSelectedButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                    employeeService.removeEmployee(parseInt(employeeIDField.getText()));
             }
         });
     }
@@ -66,5 +90,39 @@ public class RemoveEmployeeWindow {
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+    }
+
+    private void validateInput(){
+        if(employeeIDField.equals("") || !isNumeric(employeeIDField.getText()))
+            removeSelectedButton.setEnabled(false);
+        else
+            removeSelectedButton.setEnabled(true);
+    }
+
+    private static boolean isNumeric(String str) {
+        try {
+            Integer.parseInt(str);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+
+    private class FormValidationListener implements DocumentListener {
+        @Override
+        public void insertUpdate(DocumentEvent e){
+            validateInput();
+        }
+
+        @Override
+        public void removeUpdate(DocumentEvent e){
+            validateInput();
+        }
+
+        @Override
+        public void changedUpdate(DocumentEvent e){
+            validateInput();
+        }
     }
 }

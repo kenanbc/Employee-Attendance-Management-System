@@ -1,4 +1,9 @@
-package com.kenanbabicipia.example;
+package com.kenanbabicipia.example.view;
+
+import com.kenanbabicipia.example.RemoveEmployeeWindow;
+import com.kenanbabicipia.example.controller.Style;
+import com.kenanbabicipia.example.model.Employee;
+import com.kenanbabicipia.example.service.ActivityService;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,9 +22,12 @@ public class SuperAdminWindow {
     private JLabel removeLabel;
     private JLabel addLabel;
     private JLabel welcomeLabel;
+    private JButton themeButton;
 
     public SuperAdminWindow(Employee employee) {
         welcomeLabel.setText(welcomeLabel.getText() + " " + employee.getFirstName() + " " + employee.getLastName());
+        Style.setDefaultTitleFont(welcomeLabel);
+
         addLabel.setIcon(new ImageIcon(new ImageIcon("C:\\Users\\Kenan\\IdeaProjects\\EmployeeAttendanceSystemMySQL\\src\\assets\\addUser.png").getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH)));
         removeLabel.setIcon(new ImageIcon(new ImageIcon("C:\\Users\\Kenan\\IdeaProjects\\EmployeeAttendanceSystemMySQL\\src\\assets\\removeUser.png").getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH)));
         changeLabel.setIcon(new ImageIcon(new ImageIcon("C:\\Users\\Kenan\\IdeaProjects\\EmployeeAttendanceSystemMySQL\\src\\assets\\edit.png").getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH)));
@@ -59,6 +67,12 @@ public class SuperAdminWindow {
                 ChangeInformationWindow changeInformationWindow = new ChangeInformationWindow(employee);
                 changeInformationWindow.showChangeWindow(employee);
                 SwingUtilities.getWindowAncestor(adminPanel).dispose();
+            }
+        });
+        themeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Style.switchTheme(e);
             }
         });
     }

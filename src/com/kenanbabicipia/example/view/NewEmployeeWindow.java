@@ -1,8 +1,10 @@
-package com.kenanbabicipia.example;
+package com.kenanbabicipia.example.view;
 
+import com.kenanbabicipia.example.model.Employee;
+import com.kenanbabicipia.example.service.ActivityService;
+import com.kenanbabicipia.example.service.EmployeeService;
 import org.mindrot.jbcrypt.BCrypt;
 
-import javax.print.Doc;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;

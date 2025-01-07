@@ -1,17 +1,17 @@
-package com.kenanbabicipia.example;
+package com.kenanbabicipia.example.view;
+
+import com.kenanbabicipia.example.model.Activity;
+import com.kenanbabicipia.example.model.Employee;
+import com.kenanbabicipia.example.service.ActivityService;
+import com.kenanbabicipia.example.service.EmployeeService;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
-
-import static com.sun.java.accessibility.util.AWTEventMonitor.addWindowListener;
 
 public class EmployeeActivityWindow {
     private JTable activityTable;
@@ -62,6 +62,13 @@ public class EmployeeActivityWindow {
     }
 
     private void fillTable(String role, int employeeID){
+        activityTable.setModel(new DefaultTableModel(){
+            @Override
+            public boolean isCellEditable(int row, int column){
+                return false;
+            }
+        });
+
         DefaultTableModel model = (DefaultTableModel) activityTable.getModel();
         model.setColumnIdentifiers(new Object[]{"EmployeeID", "Date", "Work Time", "Log-in Time", "Log-out Time"});
 
@@ -82,11 +89,5 @@ public class EmployeeActivityWindow {
             });
         }
 
-//        activityTable.setModel(new DefaultTableModel(){
-//            @Override
-//            public boolean isCellEditable(int row, int column){
-//                return false;
-//            }
-//        });
     }
 }

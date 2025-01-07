@@ -1,4 +1,4 @@
-package com.kenanbabicipia.example;
+package com.kenanbabicipia.example.model;
 
 public class Employee {
     private int employeeID;

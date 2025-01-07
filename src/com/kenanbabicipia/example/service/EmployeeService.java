@@ -1,6 +1,7 @@
-package com.kenanbabicipia.example;
+package com.kenanbabicipia.example.service;
 
-import com.kenanbabicipia.example.*;
+import com.kenanbabicipia.example.controller.SQLController;
+import com.kenanbabicipia.example.model.Employee;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.Connection;
@@ -91,7 +92,6 @@ public class EmployeeService {
     public void updateEmployeeInformation(Employee employee){
         String query = "UPDATE employee SET firstName = ?, lastName = ?, email = ?, phoneNumber = ?, role = ?, username = ? WHERE employeeID = ?";
 
-
         try{
           PreparedStatement preparedStatement = SQLController.getInstance().getConnection().prepareStatement(query);
           preparedStatement.setString(1, employee.getFirstName());
@@ -108,6 +108,23 @@ public class EmployeeService {
             e.printStackTrace();
         }
 
+    }
+
+    public boolean removeEmployee(int employeeID){
+        String query = "DELETE FROM employee WHERE employeeID = ?";
+        try{
+            PreparedStatement preparedStatement = SQLController.getInstance().getConnection().prepareStatement(query);
+            preparedStatement.setInt(1, employeeID);
+            int rows = preparedStatement.executeUpdate();
+
+            if(rows > 0)
+                return true;
+            else
+                return false;
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        return false;
     }
 
 }

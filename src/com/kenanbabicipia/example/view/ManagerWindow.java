@@ -1,4 +1,9 @@
-package com.kenanbabicipia.example;
+package com.kenanbabicipia.example.view;
+
+import com.kenanbabicipia.example.RequestWindow;
+import com.kenanbabicipia.example.controller.Style;
+import com.kenanbabicipia.example.model.Employee;
+import com.kenanbabicipia.example.service.ActivityService;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,9 +24,12 @@ public class ManagerWindow {
     private JLabel activityLabel;
     private JLabel reportLabel;
     private JLabel requestLabel;
+    private JButton themeButton;
 
     public ManagerWindow(Employee employee){
         welcomeLabel.setText(welcomeLabel.getText() + " " + employee.getFirstName() + " " + employee.getLastName());
+        Style.setDefaultTitleFont(welcomeLabel);
+
         activityLabel.setIcon(new ImageIcon(new ImageIcon("C:\\Users\\Kenan\\IdeaProjects\\EmployeeAttendanceSystemMySQL\\src\\assets\\activity.png").getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH)));
         requestLabel.setIcon(new ImageIcon(new ImageIcon("C:\\Users\\Kenan\\IdeaProjects\\EmployeeAttendanceSystemMySQL\\src\\assets\\request.png").getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH)));
         reportLabel.setIcon(new ImageIcon(new ImageIcon("C:\\Users\\Kenan\\IdeaProjects\\EmployeeAttendanceSystemMySQL\\src\\assets\\report.png").getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH)));
@@ -61,6 +69,12 @@ public class ManagerWindow {
                 ReportWindow reportWindow = new ReportWindow(employee);
                 reportWindow.showReportWindow(employee);
                 SwingUtilities.getWindowAncestor(managerPanel).dispose();
+            }
+        });
+        themeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Style.switchTheme(e);
             }
         });
     }

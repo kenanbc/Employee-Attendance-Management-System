@@ -1,9 +1,14 @@
-package com.kenanbabicipia.example;
+package com.kenanbabicipia.example.view;
 
-import org.mindrot.jbcrypt.BCrypt;
+import com.formdev.flatlaf.FlatDarkLaf;
+import com.formdev.flatlaf.FlatLightLaf;
+import com.kenanbabicipia.example.controller.Style;
+import com.kenanbabicipia.example.model.Activity;
+import com.kenanbabicipia.example.model.Employee;
+import com.kenanbabicipia.example.service.ActivityService;
+import com.kenanbabicipia.example.service.EmployeeService;
 
 import javax.swing.*;
-import javax.swing.text.Document;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
@@ -22,23 +27,24 @@ public class LoginForm {
     private JLabel developedLabel;
     private JButton logInButton;
     private JLabel wrongLabel;
+    private JButton themeButton;
 
     public LoginForm() {
+        Style.setDefaultTitleFont(titleLabel);
+        Style.setItalicFont(developedLabel);
+        Style.setBoldFont(logInButton);
+
         logInButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String username = usernameField.getText();
-
                 String password = new String(passwordField.getPassword());
-
-                //System.out.println(BCrypt.hashpw(password, BCrypt.gensalt()));
 
                 EmployeeService employeeService = new EmployeeService();
 
                 try {
                     Employee employee = employeeService.verifyLogIn(username, password);
                     if(employee != null){
-                        //System.out.println("Proslo" + employee);
                         trackLogInTime(employee);
                         String role = employee.getRole();
                         switch (role) {
@@ -64,11 +70,17 @@ public class LoginForm {
                         SwingUtilities.getWindowAncestor(loginPanel).dispose();
 
                     }else{
-                        wrongLabel.setText("Wrong username or password!");
+                        wrongLabel.setVisible(true);
                     }
                 }catch (SQLException er){
                     System.out.println("Error: " + e);
                 }
+            }
+        });
+        themeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Style.switchTheme(e);
             }
         });
     }
@@ -93,6 +105,5 @@ public class LoginForm {
         ActivityService activityService = new ActivityService();
         activityService.addActivitiy(activity);
     }
-
 
 }

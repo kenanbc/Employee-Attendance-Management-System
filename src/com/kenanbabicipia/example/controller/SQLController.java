@@ -1,4 +1,4 @@
-package com.kenanbabicipia.example;
+package com.kenanbabicipia.example.controller;
 
 import java.sql.*;
 

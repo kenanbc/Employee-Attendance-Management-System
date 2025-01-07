@@ -1,4 +1,8 @@
-package com.kenanbabicipia.example;
+package com.kenanbabicipia.example.view;
+
+import com.kenanbabicipia.example.model.Employee;
+import com.kenanbabicipia.example.service.ActivityService;
+import com.kenanbabicipia.example.service.RequestService;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

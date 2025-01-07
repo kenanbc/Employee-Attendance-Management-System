@@ -1,4 +1,4 @@
-package com.kenanbabicipia.example;
+package com.kenanbabicipia.example.model;
 
 import java.sql.Time;
 
