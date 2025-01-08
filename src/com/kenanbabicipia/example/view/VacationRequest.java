@@ -83,7 +83,7 @@ public class VacationRequest {
         JFrame frame = new JFrame("Employee Attendance Management System");
         frame.setContentPane(new VacationRequest(employee).vacationPanel);
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-
+        frame.setResizable(false);
         frame.addWindowListener(new WindowAdapter(){
             @Override
             public void windowClosing(WindowEvent e){

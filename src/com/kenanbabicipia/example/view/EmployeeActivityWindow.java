@@ -1,5 +1,6 @@
 package com.kenanbabicipia.example.view;
 
+import com.kenanbabicipia.example.controller.Style;
 import com.kenanbabicipia.example.model.Activity;
 import com.kenanbabicipia.example.model.Employee;
 import com.kenanbabicipia.example.service.ActivityService;
@@ -18,12 +19,14 @@ public class EmployeeActivityWindow {
     private JPanel activityPanel;
     private JLabel titleLabel;
     private JButton backButton;
-    private EmployeeService employeeService = new EmployeeService();
-    private ActivityService activityService = new ActivityService();
+    private JLabel totalLabel;
+    private final EmployeeService employeeService = new EmployeeService();
+    private final ActivityService activityService = new ActivityService();
 
     public EmployeeActivityWindow(Employee employee){
-        this.employeeService = new EmployeeService();
+
         fillTable(employee.getRole(), employee.getEmployeeID());
+        totalLabel.setText(totalLabel.getText() + " " + activityService.calculateTotalTime(activityTable, 4));
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -44,12 +47,12 @@ public class EmployeeActivityWindow {
         JFrame frame = new JFrame("Employee Attendance Management System");
         frame.setContentPane(new EmployeeActivityWindow(employee).activityPanel);
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-
+        frame.setResizable(false);
         frame.addWindowListener(new WindowAdapter(){
             @Override
             public void windowClosing(WindowEvent e){
                 ActivityService activityService = new ActivityService();
-                Boolean shouldClose = activityService.closingLogOut(activityPanel, employee.getEmployeeID());
+                boolean shouldClose = activityService.closingLogOut(activityPanel, employee.getEmployeeID());
                 if(shouldClose){
                     frame.dispose();
                 }
@@ -68,9 +71,8 @@ public class EmployeeActivityWindow {
                 return false;
             }
         });
-
         DefaultTableModel model = (DefaultTableModel) activityTable.getModel();
-        model.setColumnIdentifiers(new Object[]{"EmployeeID", "Date", "Work Time", "Log-in Time", "Log-out Time"});
+        model.setColumnIdentifiers(new Object[]{"Employee", "Date", "Log-in Time", "Log-out Time", "Work Time"});
 
         List<Activity> activities;
 
@@ -80,14 +82,15 @@ public class EmployeeActivityWindow {
             activities = activityService.selectAllActivities(employeeID);
 
         for(Activity activity : activities){
+            Employee employee = employeeService.selectEmployeeInformation(activity.getEmployeeID());
             model.addRow(new Object[]{
-                    activity.getEmployeeID(),
+                    employee.getFirstName() + " " + employee.getLastName(),
                     activity.getDate(),
                     activity.getLogin(),
                     activity.getLogout(),
                     activity.getTotalWork()
             });
         }
-
+        Style.centerAlignTable(activityTable);
     }
 }

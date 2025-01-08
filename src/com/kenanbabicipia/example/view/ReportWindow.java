@@ -27,7 +27,9 @@ public class ReportWindow {
     private JFormattedTextField employeeIDField;
     private JFormattedTextField monthField;
     private JLabel monthLabel;
+    private JLabel errorLabel;
     private final ActivityService activityService = new ActivityService();
+    private final EmployeeService employeeService = new EmployeeService();
     private Employee selectedEmployee;
 
     public ReportWindow(Employee employee) {
@@ -43,26 +45,38 @@ public class ReportWindow {
             @Override
             public void actionPerformed(ActionEvent e) {
                 selectedLabel.setText("Selected Employee: ");
-                if(employeeIDField.getText().equals("")){
+                DefaultTableModel model = (DefaultTableModel) activityTable.getModel();
+                model.setRowCount(0);
+                if(employeeIDField.getText().isEmpty()){
                     selectedLabel.setText(selectedLabel.getText() + "No Employee ID entered! Try again!");
-                    DefaultTableModel model = (DefaultTableModel) activityTable.getModel();
-                    model.setRowCount(0);
+
                     generateReportInPDFButton.setEnabled(false);
                     return;
                 }
                 int employeeID = parseInt(employeeIDField.getText());
-                EmployeeService employeeService = new EmployeeService();
 
                 selectedEmployee = employeeService.selectEmployeeInformation(employeeID);
                 if(selectedEmployee != null){
                     selectedLabel.setText(selectedLabel.getText() + selectedEmployee.getFirstName() + " " + selectedEmployee.getLastName() + ", Role: " + selectedEmployee.getRole());
-                    if(monthField.equals("")) fillReportTable(selectedEmployee.getEmployeeID(), monthField.getText());
-                    else fillReportTable(selectedEmployee.getEmployeeID(), monthField.getText());
+                    if(!monthField.getText().isEmpty())
+                    {
+                        if(parseInt(monthField.getText()) > 12){
+                            generateReportInPDFButton.setEnabled(false);
+                            errorLabel.setVisible(true);
+                            errorLabel.setText("Invalid month!");
+                            return;
+                        }
+
+                    }
+                    errorLabel.setVisible(false);
+                    fillReportTable(selectedEmployee.getEmployeeID(), monthField.getText());
                     generateReportInPDFButton.setEnabled(true);
                 }
                 else{
                     selectedLabel.setText(selectedLabel.getText() + "There is no Employee with entered ID! Try again!");
+                    errorLabel.setVisible(false);
                 }
+
             }
         });
         generateReportInPDFButton.addActionListener(new ActionListener() {
@@ -89,17 +103,18 @@ public class ReportWindow {
         });
         DefaultTableModel model = (DefaultTableModel) activityTable.getModel();
         model.setRowCount(0);
-        model.setColumnIdentifiers(new Object[]{"EmployeeID", "Date", "Log-in Time", "Log-out Time", "Work Time"});
+        model.setColumnIdentifiers(new Object[]{"Employee", "Date", "Log-in Time", "Log-out Time", "Work Time"});
         List<Activity> activities;
 
-        if(month.equals(""))
+        if(month.isEmpty())
             activities = activityService.selectAllActivities(employeeID);
         else
             activities = activityService.selectAllActivities(employeeID, month);
 
         for(Activity activity : activities){
+            Employee employee = employeeService.selectEmployeeInformation(activity.getEmployeeID());
             model.addRow(new Object[]{
-                    activity.getEmployeeID(),
+                    employee.getFirstName() + " " + employee.getLastName(),
                     activity.getDate(),
                     activity.getLogin(),
                     activity.getLogout(),
@@ -112,7 +127,7 @@ public class ReportWindow {
         JFrame frame = new JFrame("Employee Attendance Management System");
         frame.setContentPane(new ReportWindow(employee).reportPanel);
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-
+        frame.setResizable(false);
         frame.addWindowListener(new WindowAdapter(){
             @Override
             public void windowClosing(WindowEvent e){

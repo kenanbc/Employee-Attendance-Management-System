@@ -29,12 +29,12 @@ public class RequestService {
 
     public List<Request> selectWaitingRequest(){
         List<Request> requests = new ArrayList<>();
-        String query = "SELECT employeeID, startDate, endDate, description FROM request WHERE status = 'Waiting'";
+        String query = "SELECT requestID, employeeID, startDate, endDate, description FROM request WHERE status = 'Waiting'";
         try{
             PreparedStatement preparedStatementSelect = SQLController.getInstance().getConnection().prepareStatement(query);
             ResultSet resultset = preparedStatementSelect.executeQuery();
             while(resultset.next()){
-                Request request = new Request(resultset.getInt("employeeID"), resultset.getString("startDate"), resultset.getString("endDate"), resultset.getString("description"));
+                Request request = new Request(resultset.getInt("requestID"), resultset.getInt("employeeID"), resultset.getString("startDate"), resultset.getString("endDate"), resultset.getString("description"));
                 requests.add(request);
             }
             return requests;
@@ -44,24 +44,42 @@ public class RequestService {
         return requests;
     }
 
-    public void approveRequest(int employeeID) {
-        String query = "UPDATE request SET status = 'Approved' WHERE employeeID = ? AND status LIKE 'Waiting'";
+    public List<Request> selectEmployeeRequest(int employeeID){
+        List<Request> requests = new ArrayList<>();
+        String query = "SELECT startDate, endDate, description, status FROM request WHERE employeeID = ? AND STATUS NOT LIKE 'Waiting'";
+        try{
+            PreparedStatement preparedStatementSelect = SQLController.getInstance().getConnection().prepareStatement(query);
+            preparedStatementSelect.setInt(1, employeeID);
+            ResultSet resultset = preparedStatementSelect.executeQuery();
+            while(resultset.next()){
+                Request request = new Request(resultset.getString("startDate"), resultset.getString("endDate"), resultset.getString("description"), resultset.getString("status"));
+                requests.add(request);
+            }
+            return requests;
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return requests;
+    }
+
+    public void approveRequest(int requestID) {
+        String query = "UPDATE request SET status = 'Approved' WHERE requestID = ?";
 
         try{
             PreparedStatement preparedStatement = SQLController.getInstance().getConnection().prepareStatement(query);
-            preparedStatement.setInt(1, employeeID);
+            preparedStatement.setInt(1, requestID);
             preparedStatement.executeUpdate();
         } catch(SQLException e){
             e.printStackTrace();
         }
     }
 
-    public void denyRequest(int employeeID) {
-        String query = "UPDATE request SET status = 'Denied' WHERE employeeID = ?";
+    public void denyRequest(int requestID) {
+        String query = "UPDATE request SET status = 'Denied' WHERE requestID = ?";
 
         try{
             PreparedStatement preparedStatement = SQLController.getInstance().getConnection().prepareStatement(query);
-            preparedStatement.setInt(1, employeeID);
+            preparedStatement.setInt(1, requestID);
             preparedStatement.executeUpdate();
         } catch(SQLException e){
             e.printStackTrace();

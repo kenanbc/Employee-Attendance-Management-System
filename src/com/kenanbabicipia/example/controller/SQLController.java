@@ -11,10 +11,8 @@ public class SQLController {
     private static SQLController instance;
     private Connection connection;
 
-    // Privatni konstruktor za Singleton
     private SQLController() {}
 
-    // Singleton metoda za dobijanje instance
     public static SQLController getInstance() {
         if (instance == null) {
             synchronized (SQLController.class) {
@@ -26,7 +24,6 @@ public class SQLController {
         return instance;
     }
 
-    // Otvaranje konekcije
     public void connect() throws SQLException {
         if (connection == null || connection.isClosed()) {
             connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
@@ -34,7 +31,6 @@ public class SQLController {
         }
     }
 
-    // Dobijanje konekcije
     public Connection getConnection() throws SQLException {
         if (connection == null || connection.isClosed()) {
             connect();
@@ -42,14 +38,12 @@ public class SQLController {
         return connection;
     }
 
-    // Izvršavanje SELECT upita
     public ResultSet executeQuery(String query, Object... params) throws SQLException {
         connect();
         PreparedStatement preparedStatement = prepareStatement(query, params);
         return preparedStatement.executeQuery();
     }
 
-    // Izvršavanje INSERT/UPDATE/DELETE upita
     public int executeUpdate(String query, Object... params) throws SQLException {
         connect();
         try (PreparedStatement preparedStatement = prepareStatement(query, params)) {
@@ -57,7 +51,6 @@ public class SQLController {
         }
     }
 
-    // Zatvaranje konekcije
     public void disconnect() throws SQLException {
         if (connection != null && !connection.isClosed()) {
             connection.close();
@@ -65,14 +58,12 @@ public class SQLController {
         }
     }
 
-    // Privatna pomoćna metoda za pripremu upita sa parametrima
     private PreparedStatement prepareStatement(String query, Object... params) throws SQLException {
         PreparedStatement preparedStatement = getConnection().prepareStatement(query);
         setParameters(preparedStatement, params);
         return preparedStatement;
     }
 
-    // Postavljanje parametara u PreparedStatement
     private void setParameters(PreparedStatement preparedStatement, Object... params) throws SQLException {
         for (int i = 0; i < params.length; i++) {
             preparedStatement.setObject(i + 1, params[i]);

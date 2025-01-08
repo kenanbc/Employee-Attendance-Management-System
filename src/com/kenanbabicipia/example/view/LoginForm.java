@@ -80,7 +80,7 @@ public class LoginForm {
         themeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Style.switchTheme(e);
+                Style.switchTheme(e, SwingUtilities.getRoot((JButton) e.getSource()));
             }
         });
     }
@@ -89,6 +89,7 @@ public class LoginForm {
         JFrame frame = new JFrame("Employee Attendance Management System");
         frame.setContentPane(new LoginForm().loginPanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setResizable(false);
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);

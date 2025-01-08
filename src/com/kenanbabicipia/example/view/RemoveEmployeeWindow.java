@@ -1,10 +1,8 @@
-package com.kenanbabicipia.example;
+package com.kenanbabicipia.example.view;
 
 import com.kenanbabicipia.example.model.Employee;
 import com.kenanbabicipia.example.service.ActivityService;
 import com.kenanbabicipia.example.service.EmployeeService;
-import com.kenanbabicipia.example.view.NewEmployeeWindow;
-import com.kenanbabicipia.example.view.SuperAdminWindow;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -51,9 +49,26 @@ public class RemoveEmployeeWindow {
                     employeeService.removeEmployee(parseInt(employeeIDField.getText()));
             }
         });
+        previewEmployee.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                int selected = previewEmployee.getSelectedRow();
+                if(selected != -1){
+                    String value = previewEmployee.getValueAt(selected, 0).toString();
+                    employeeIDField.setText(value);
+                }
+            }
+        });
     }
 
     private void fillTable(){
+        previewEmployee.setModel(new DefaultTableModel(){
+            @Override
+            public boolean isCellEditable(int row, int column){
+                return false;
+            }
+        });
         DefaultTableModel model = (DefaultTableModel) previewEmployee.getModel();
         model.setColumnIdentifiers(new Object[]{"EmployeeID", "First Name", "Last Name", "E-mail", "Phone Number", "Role", "Username"});
         List<Employee> employees  = employeeService.selectAllEmployees();
@@ -75,7 +90,7 @@ public class RemoveEmployeeWindow {
         JFrame frame = new JFrame("Employee Attendance Management System");
         frame.setContentPane(new RemoveEmployeeWindow(employee).removePanel);
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-
+        frame.setResizable(false);
         frame.addWindowListener(new WindowAdapter(){
             @Override
             public void windowClosing(WindowEvent e){

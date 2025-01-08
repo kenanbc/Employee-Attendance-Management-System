@@ -20,15 +20,21 @@ public class EmployeeWindow {
     private JLabel activityLabel;
     private JLabel requestLabel;
     private JButton themeButton;
+    private JButton notificationButton;
 
     public EmployeeWindow(Employee employee) {
 
         welcomeLabel.setText(welcomeLabel.getText() + " " + employee.getFirstName() + " " + employee.getLastName());
         Style.setDefaultTitleFont(welcomeLabel);
 
-        activityLabel.setIcon(new ImageIcon(new ImageIcon("C:\\Users\\Kenan\\IdeaProjects\\EmployeeAttendanceSystemMySQL\\src\\assets\\activity.png").getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH)));
-        requestLabel.setIcon(new ImageIcon(new ImageIcon("C:\\Users\\Kenan\\IdeaProjects\\EmployeeAttendanceSystemMySQL\\src\\assets\\request.png").getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH)));
+        //activityLabel.setIcon(new ImageIcon(new ImageIcon("C:\\Users\\Kenan\\IdeaProjects\\EmployeeAttendanceSystemMySQL\\src\\assets\\activity.png").getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH)));
+        //requestLabel.setIcon(new ImageIcon(new ImageIcon("C:\\Users\\Kenan\\IdeaProjects\\EmployeeAttendanceSystemMySQL\\src\\assets\\request.png").getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH)));
 
+
+        activityLabel.setText("\uD83D\uDC68\uD83C\uDFFB\u200D\uD83D\uDCBB");
+        requestLabel.setText("\uD83D\uDCDD");
+        Style.setIconFont(activityLabel);
+        Style.setIconFont(requestLabel);
 
         logOutButton.addActionListener(new ActionListener() {
             @Override
@@ -60,7 +66,13 @@ public class EmployeeWindow {
         themeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Style.switchTheme(e);
+                Style.switchTheme(e,  SwingUtilities.getRoot((JButton) e.getSource()));
+            }
+        });
+        notificationButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                NotificationWindow.showNotificationWindow(employee);
             }
         });
     }
@@ -69,6 +81,7 @@ public class EmployeeWindow {
         JFrame frame = new JFrame("Employee Attendance Management System");
         frame.setContentPane(new EmployeeWindow(employee).employeePanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setResizable(false);
         frame.addWindowListener(new WindowAdapter(){
             @Override
             public void windowClosing(WindowEvent e){

@@ -1,6 +1,5 @@
 package com.kenanbabicipia.example.view;
 
-import com.kenanbabicipia.example.RemoveEmployeeWindow;
 import com.kenanbabicipia.example.controller.Style;
 import com.kenanbabicipia.example.model.Employee;
 import com.kenanbabicipia.example.service.ActivityService;
@@ -28,10 +27,16 @@ public class SuperAdminWindow {
         welcomeLabel.setText(welcomeLabel.getText() + " " + employee.getFirstName() + " " + employee.getLastName());
         Style.setDefaultTitleFont(welcomeLabel);
 
-        addLabel.setIcon(new ImageIcon(new ImageIcon("C:\\Users\\Kenan\\IdeaProjects\\EmployeeAttendanceSystemMySQL\\src\\assets\\addUser.png").getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH)));
-        removeLabel.setIcon(new ImageIcon(new ImageIcon("C:\\Users\\Kenan\\IdeaProjects\\EmployeeAttendanceSystemMySQL\\src\\assets\\removeUser.png").getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH)));
-        changeLabel.setIcon(new ImageIcon(new ImageIcon("C:\\Users\\Kenan\\IdeaProjects\\EmployeeAttendanceSystemMySQL\\src\\assets\\edit.png").getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH)));
+        //addLabel.setIcon(new ImageIcon(new ImageIcon("C:\\Users\\Kenan\\IdeaProjects\\EmployeeAttendanceSystemMySQL\\src\\assets\\addUser.png").getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH)));
+        //removeLabel.setIcon(new ImageIcon(new ImageIcon("C:\\Users\\Kenan\\IdeaProjects\\EmployeeAttendanceSystemMySQL\\src\\assets\\removeUser.png").getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH)));
+        //changeLabel.setIcon(new ImageIcon(new ImageIcon("C:\\Users\\Kenan\\IdeaProjects\\EmployeeAttendanceSystemMySQL\\src\\assets\\edit.png").getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH)));
 
+        addLabel.setText("➕");
+        removeLabel.setText("❌");
+        changeLabel.setText("✏");
+        Style.setIconFont(addLabel);
+        Style.setIconFont(removeLabel);
+        Style.setIconFont(changeLabel);
 
 
         logOutButton.addActionListener(new ActionListener() {
@@ -72,7 +77,7 @@ public class SuperAdminWindow {
         themeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Style.switchTheme(e);
+                Style.switchTheme(e,  SwingUtilities.getRoot((JButton) e.getSource()));
             }
         });
     }
@@ -81,7 +86,7 @@ public class SuperAdminWindow {
         JFrame frame = new JFrame("Employee Attendance Management System");
         frame.setContentPane(new SuperAdminWindow(employee).adminPanel);
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-
+        frame.setResizable(false);
         frame.addWindowListener(new WindowAdapter(){
             @Override
             public void windowClosing(WindowEvent e){

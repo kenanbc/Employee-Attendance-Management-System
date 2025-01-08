@@ -6,6 +6,15 @@ public class Request {
     private String startDate;
     private String endDate;
     private String description;
+    private String status;
+
+    public Request(int requestID, int employeeID, String startDate, String endDate, String description) {
+        this.requestID = requestID;
+        this.employeeID = employeeID;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.description = description;
+    }
 
     public Request(int employeeID, String startDate, String endDate, String description) {
         this.employeeID = employeeID;
@@ -14,10 +23,19 @@ public class Request {
         this.description = description;
     }
 
-    public Request(String startDate, String endDate, String description) {
+    public Request(String startDate, String endDate, String description, String status) {
         this.startDate = startDate;
         this.endDate = endDate;
         this.description = description;
+        this.status = status;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public int getEmployeeID() {

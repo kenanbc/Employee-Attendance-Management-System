@@ -167,14 +167,14 @@
           <text value="Role"/>
         </properties>
       </component>
-      <component id="9ef04" class="javax.swing.JLabel" binding="successLabel">
+      <component id="9ef04" class="javax.swing.JLabel" binding="messageLabel">
         <constraints>
           <grid row="10" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <font style="1"/>
-          <text value="Successfully updated employee information!"/>
-          <visible value="false"/>
+          <text value=" "/>
+          <visible value="true"/>
         </properties>
       </component>
     </children>

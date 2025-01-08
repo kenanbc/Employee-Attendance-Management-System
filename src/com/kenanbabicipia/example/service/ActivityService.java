@@ -39,7 +39,7 @@ public class ActivityService {
 
     public List<Activity> selectAllActivities(){
         List<Activity> activities = new ArrayList<>();
-        String query = "SELECT employeeID, date, login, logout, totalWork FROM activity";
+        String query = "SELECT employeeID, date, login, logout, totalWork FROM activity ORDER BY activityID DESC";
         try{
             sqlController.connect();
             ResultSet resultSet = sqlController.executeQuery(query);
@@ -56,7 +56,7 @@ public class ActivityService {
 
     public List<Activity> selectAllActivities(int employeeID){
         List<Activity> activities = new ArrayList<>();
-        String query = "SELECT employeeID, date, login, logout, totalWork FROM activity WHERE employeeID = ?";
+        String query = "SELECT employeeID, date, login, logout, totalWork FROM activity WHERE employeeID = ? ORDER BY activityID DESC";
         try{
             sqlController.connect();
             PreparedStatement preparedStatement = sqlController.getConnection().prepareStatement(query);
@@ -123,10 +123,8 @@ public class ActivityService {
 
             int updated = preparedStatement.executeUpdate();
 
-            if (updated > 0) {
+            if(updated > 0){
                 System.out.println("Logout time and total work updated successfully!");
-            } else {
-                System.out.println("No active session found for this employee.");
             }
             }
 
@@ -156,7 +154,7 @@ public class ActivityService {
 
 
     public boolean closingLogOut(JPanel activePanel, int employeeID){
-        int confirmation = JOptionPane.showConfirmDialog(activePanel, "Would you like to close app?","Warning!", JOptionPane.YES_NO_OPTION);
+        int confirmation = JOptionPane.showConfirmDialog(activePanel, "Would you like to close app?\nYou will be logged out","Warning!", JOptionPane.YES_NO_OPTION);
         if(confirmation == JOptionPane.YES_OPTION){
             updateLogOut(employeeID);
             return true;

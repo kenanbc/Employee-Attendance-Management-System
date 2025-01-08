@@ -1,10 +1,14 @@
 package com.kenanbabicipia.example.view;
 
+import com.kenanbabicipia.example.controller.Style;
 import com.kenanbabicipia.example.model.Employee;
 import com.kenanbabicipia.example.service.ActivityService;
 import com.kenanbabicipia.example.service.EmployeeService;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -25,12 +29,20 @@ public class ChangeInformationWindow {
     private JTextField usernameField;
     private JComboBox<String> roleOptions;
     private JButton saveChangesButton;
-    private JLabel successLabel;
+    private JLabel messageLabel;
+    private static final EmployeeService employeeService = new EmployeeService();
 
     public ChangeInformationWindow(Employee employee) {
 
         roleOptions.addItem("Employee");
         roleOptions.addItem("Manager");
+        roleOptions.addItem("Superadmin");
+
+        nameField.getDocument().addDocumentListener(new FormValidationListener());
+        lastNameField.getDocument().addDocumentListener(new FormValidationListener());
+        emailField.getDocument().addDocumentListener(new FormValidationListener());
+        numberField.getDocument().addDocumentListener(new FormValidationListener());
+        usernameField.getDocument().addDocumentListener(new FormValidationListener());
 
         backButton.addActionListener(new ActionListener() {
             @Override
@@ -43,7 +55,7 @@ public class ChangeInformationWindow {
         searchButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                successLabel.setVisible(false);
+                messageLabel.setText("");
                 if(employeeIDField.getText().equals("")){
                     emptyForm();
                     chanegeStateForm(false);
@@ -51,7 +63,7 @@ public class ChangeInformationWindow {
                 }
                 int employeeID = parseInt(employeeIDField.getText());
 
-                EmployeeService employeeService = new EmployeeService();
+
                 Employee selectedEmployee = employeeService.selectEmployeeInformation(employeeID);
 
                 if(selectedEmployee != null){
@@ -66,19 +78,24 @@ public class ChangeInformationWindow {
         saveChangesButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                EmployeeService employeeService = new EmployeeService();
                 Employee selectedEmployee = getChanges();
-                employeeService.updateEmployeeInformation(selectedEmployee);
-                chanegeStateForm(false);
-                successLabel.setVisible(true);
+                boolean isUpdated = employeeService.updateEmployeeInformation(selectedEmployee);
+                if(isUpdated){
+                    chanegeStateForm(false);
+                    messageLabel.setText("Successfully updated employee information!");
+                    Style.setTextColor(messageLabel, Color.decode("#5CB338"));
+                }
+                else{
+                    messageLabel.setText("Unsuccessful update! Try again!");
+                    Style.setTextColor(messageLabel, Color.RED);
+                }
             }
         });
     }
 
-    private void fillSelectedFields(int employeID){
+    private void fillSelectedFields(int employeeID){
 
-        EmployeeService employeeService = new EmployeeService();
-        Employee selectedEmployee = employeeService.selectEmployeeInformation(employeID);
+        Employee selectedEmployee = employeeService.selectEmployeeInformation(employeeID);
         nameField.setText(selectedEmployee.getFirstName());
         lastNameField.setText(selectedEmployee.getLastName());
         emailField.setText(selectedEmployee.getEmail());
@@ -126,7 +143,7 @@ public class ChangeInformationWindow {
         JFrame frame = new JFrame("Employee Attendance Management System");
         frame.setContentPane(new ChangeInformationWindow(employee).changePanel);
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-
+        frame.setResizable(false);
         frame.addWindowListener(new WindowAdapter(){
             @Override
             public void windowClosing(WindowEvent e){
@@ -142,4 +159,38 @@ public class ChangeInformationWindow {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
+
+    private void validateInput(){
+        if(!nameField.getText().equals("") && !lastNameField.getText().equals("") && !emailField.getText().equals("") && !numberField.getText().equals("") && !usernameField.getText().equals(""))
+            saveChangesButton.setEnabled(true);
+        else
+            saveChangesButton.setEnabled(false);
+    }
+
+    public void validUsername(){
+        String username = usernameField.getText();
+        boolean valid = employeeService.validateUsername(username);
+        if(valid){
+            messageLabel.setText(" ");
+        }else{
+            messageLabel.setText("Username already in use.");
+            Style.setTextColor(messageLabel, Color.RED);
+            saveChangesButton.setEnabled(false);
+        }
+    }
+
+    class FormValidationListener implements DocumentListener {
+        @Override
+        public void insertUpdate(DocumentEvent e){
+            validateInput();
+            validUsername();
+        }
+        @Override
+        public void removeUpdate(DocumentEvent e){validateInput(); validUsername();}
+        @Override
+        public void changedUpdate(DocumentEvent e){
+            validateInput(); validUsername();
+        }
+    }
+
 }

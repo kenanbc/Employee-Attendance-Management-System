@@ -16,6 +16,11 @@ import javax.swing.*;
 import javax.swing.table.TableModel;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.time.Month;
+import java.time.format.TextStyle;
+import java.util.Locale;
+
+import static java.lang.Integer.parseInt;
 
 public class PDFGenerator {
 
@@ -31,7 +36,14 @@ public class PDFGenerator {
             title.setAlignment(Element.ALIGN_CENTER);
             document.add(title);
 
-            month = month.equals("") ? "Every month" : month;
+            Month m;
+
+            if(month.isEmpty()){
+                month = "Every month";
+            }else{
+                m = Month.of(parseInt(month));
+                month = m.getDisplayName(TextStyle.FULL, Locale.ENGLISH);
+            }
 
             document.add(new Paragraph("\nName: " + name + " " + lastName + "\nRole: " + role + "\nMonth: " + month + "\n \n"));
 

@@ -89,7 +89,7 @@ public class EmployeeService {
         return employees;
     }
 
-    public void updateEmployeeInformation(Employee employee){
+    public boolean updateEmployeeInformation(Employee employee){
         String query = "UPDATE employee SET firstName = ?, lastName = ?, email = ?, phoneNumber = ?, role = ?, username = ? WHERE employeeID = ?";
 
         try{
@@ -102,12 +102,28 @@ public class EmployeeService {
           preparedStatement.setString(6, employee.getUsername());
           preparedStatement.setInt(7, employee.getEmployeeID());
 
-          preparedStatement.executeUpdate();
+          int rowsUpdated = preparedStatement.executeUpdate();
+          return rowsUpdated > 0;
 
         } catch(SQLException e){
             e.printStackTrace();
         }
+        return false;
+    }
 
+    public boolean validateUsername(String username){
+        String query = "SELECT employeeID FROM employee WHERE username = ?";
+        try{
+            PreparedStatement preparedStatementSelect = SQLController.getInstance().getConnection().prepareStatement(query);
+            preparedStatementSelect.setString(1, username);
+            ResultSet resultset = preparedStatementSelect.executeQuery();
+            if (resultset.next()) {
+                return false;
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return true;
     }
 
     public boolean removeEmployee(int employeeID){
