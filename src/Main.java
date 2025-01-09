@@ -1,10 +1,5 @@
-import com.formdev.flatlaf.FlatDarculaLaf;
-import com.formdev.flatlaf.FlatDarkLaf;
-import com.formdev.flatlaf.FlatLightLaf;
-import com.kenanbabicipia.example.controller.Style;
-import com.kenanbabicipia.example.view.LoginForm;
-
-import javax.swing.*;
+import com.kenanbabicipia.controller.Style;
+import com.kenanbabicipia.view.LoginForm;
 
 
 public class Main {
