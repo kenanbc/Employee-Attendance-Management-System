@@ -28,6 +28,7 @@ public class Style {
             UIManager.put("Button.borderWidth", 2);
             UIManager.put("Button.margin", new Insets(5, 7, 5, 7));
             UIManager.put("Button.font", new Font("Inter", Font.PLAIN, 14));
+            UIManager.put("Button.focusedBorderColor", Color.TRANSLUCENT);
             setDefaultLightStyle();
 
         } catch (Exception e) {

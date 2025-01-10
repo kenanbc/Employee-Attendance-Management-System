@@ -7,6 +7,8 @@ import com.kenanbabicipia.service.ActivityService;
 import com.kenanbabicipia.service.EmployeeService;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -33,6 +35,8 @@ public class ReportWindow {
     private Employee selectedEmployee;
 
     public ReportWindow(Employee employee) {
+
+        monthField.getDocument().addDocumentListener(new FormValidationListener());
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -58,16 +62,16 @@ public class ReportWindow {
                 selectedEmployee = employeeService.selectEmployeeInformation(employeeID);
                 if(selectedEmployee != null){
                     selectedLabel.setText(selectedLabel.getText() + selectedEmployee.getFirstName() + " " + selectedEmployee.getLastName() + ", Role: " + selectedEmployee.getRole());
-                    if(!monthField.getText().isEmpty())
-                    {
-                        if(parseInt(monthField.getText()) > 12){
-                            generateReportInPDFButton.setEnabled(false);
-                            errorLabel.setVisible(true);
-                            errorLabel.setText("Invalid month!");
-                            return;
-                        }
-
-                    }
+//                    if(!monthField.getText().isEmpty())
+//                    {
+//                        if(parseInt(monthField.getText()) > 12){
+//                            generateReportInPDFButton.setEnabled(false);
+//                            errorLabel.setVisible(true);
+//                            errorLabel.setText("Invalid month!");
+//                            return;
+//                        }
+//
+//                    }
                     errorLabel.setVisible(false);
                     fillReportTable(selectedEmployee.getEmployeeID(), monthField.getText());
                     generateReportInPDFButton.setEnabled(true);
@@ -142,5 +146,33 @@ public class ReportWindow {
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+    }
+
+    private void validateInput(){
+        generateReportInPDFButton.setEnabled(false);
+        DefaultTableModel model = (DefaultTableModel) activityTable.getModel();
+        model.setRowCount(0);
+        if(!monthField.getText().isEmpty()) {
+            int month = parseInt(monthField.getText());
+            if(month <= 12) {
+                //generateReportInPDFButton.setEnabled(true);
+                errorLabel.setVisible(false);
+                searchButton.setEnabled(true);
+            }else{
+                searchButton.setEnabled(false);
+                errorLabel.setText("Invalid month!");
+                errorLabel.setVisible(true);
+            }
+        }
+    }
+
+
+    class FormValidationListener implements DocumentListener {
+        @Override
+        public void insertUpdate(DocumentEvent e){validateInput();}
+        @Override
+        public void removeUpdate(DocumentEvent e){validateInput();}
+        @Override
+        public void changedUpdate(DocumentEvent e){validateInput();}
     }
 }

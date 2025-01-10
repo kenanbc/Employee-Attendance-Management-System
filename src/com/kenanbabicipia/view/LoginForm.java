@@ -7,6 +7,7 @@ import com.kenanbabicipia.service.ActivityService;
 import com.kenanbabicipia.service.EmployeeService;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
@@ -31,6 +32,7 @@ public class LoginForm {
         Style.setDefaultTitleFont(titleLabel);
         Style.developedByWaterMark(developedLabel);
         Style.setBoldFont(logInButton);
+        wrongLabel.setText("");
 
         logInButton.addActionListener(new ActionListener() {
             @Override
@@ -68,7 +70,7 @@ public class LoginForm {
                         SwingUtilities.getWindowAncestor(loginPanel).dispose();
 
                     }else{
-                        wrongLabel.setVisible(true);
+                        wrongLabel.setText("Wrong username or password!");
                     }
                 }catch (SQLException er){
                     System.out.println("Error: " + e);
@@ -80,6 +82,7 @@ public class LoginForm {
             public void actionPerformed(ActionEvent e) {
                 Style.switchTheme(e, SwingUtilities.getRoot((JButton) e.getSource()));
                 Style.developedByWaterMark(developedLabel);
+                Style.setTextColor(wrongLabel, Color.RED);
             }
         });
     }

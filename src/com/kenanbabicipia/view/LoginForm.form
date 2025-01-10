@@ -79,7 +79,7 @@
           <background color="-1763321"/>
           <foreground color="-1763321"/>
           <text value="Wrong username or password!"/>
-          <visible value="false"/>
+          <visible value="true"/>
         </properties>
       </component>
       <component id="7a922" class="javax.swing.JButton" binding="logInButton">

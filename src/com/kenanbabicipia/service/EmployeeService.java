@@ -126,6 +126,37 @@ public class EmployeeService {
         return true;
     }
 
+    public boolean validateUsername(String username, int employeeID){
+        String query = "SELECT employeeID FROM employee WHERE username = ? AND employeeID <> ?";
+        try{
+            PreparedStatement preparedStatementSelect = SQLController.getInstance().getConnection().prepareStatement(query);
+            preparedStatementSelect.setString(1, username);
+            preparedStatementSelect.setInt(2, employeeID);
+            ResultSet resultset = preparedStatementSelect.executeQuery();
+            if (resultset.next()) {
+                return false;
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return true;
+    }
+
+    public boolean validateEmployeeID(int employeeID){
+        String query = "SELECT employeeID FROM employee WHERE employeeID = ?";
+        try{
+            PreparedStatement preparedStatementSelect = SQLController.getInstance().getConnection().prepareStatement(query);
+            preparedStatementSelect.setInt(1, employeeID);
+            ResultSet resultset = preparedStatementSelect.executeQuery();
+            if (resultset.next()) {
+                return true;
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public boolean removeEmployee(int employeeID){
         String query = "DELETE FROM employee WHERE employeeID = ?";
         try{

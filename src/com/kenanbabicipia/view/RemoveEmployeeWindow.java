@@ -1,5 +1,6 @@
 package com.kenanbabicipia.view;
 
+import com.kenanbabicipia.controller.Style;
 import com.kenanbabicipia.model.Employee;
 import com.kenanbabicipia.service.ActivityService;
 import com.kenanbabicipia.service.EmployeeService;
@@ -8,6 +9,7 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
 
@@ -27,6 +29,7 @@ public class RemoveEmployeeWindow {
 
     public RemoveEmployeeWindow(Employee employee) {
         fillTable();
+
         employeeIDField.getDocument().addDocumentListener(new FormValidationListener());
         backButton.addActionListener(new ActionListener() {
             @Override
@@ -36,23 +39,34 @@ public class RemoveEmployeeWindow {
                 SwingUtilities.getWindowAncestor(removePanel).dispose();
             }
         });
-        employeeIDField.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-                super.keyTyped(e);
-                employeeIDField.getDocument().addDocumentListener(new FormValidationListener());
-            }
-        });
+
         removeSelectedButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                    employeeService.removeEmployee(parseInt(employeeIDField.getText()));
+                boolean removed = employeeService.removeEmployee(parseInt(employeeIDField.getText()));
+                if (removed) {
+                    errorLabel.setText("Successfully removed Employee!");
+                    Style.setTextColor(errorLabel, Color.decode("#5CB338"));
+                    Style.setBoldFont(errorLabel);
+                    errorLabel.setVisible(true);
+                    employeeIDField.setText("");
+                    DefaultTableModel model = (DefaultTableModel) previewEmployee.getModel();
+                    model.setRowCount(0);
+                    fillTable();
+                }
+                else{
+                    errorLabel.setText("Error while deleting Employee!");
+                    Style.setTextColor(errorLabel, Color.RED);
+                    errorLabel.setVisible(true);
+                    Style.setBoldFont(errorLabel);
+                }
             }
         });
         previewEmployee.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
+                errorLabel.setVisible(false);
                 int selected = previewEmployee.getSelectedRow();
                 if(selected != -1){
                     String value = previewEmployee.getValueAt(selected, 0).toString();
@@ -108,7 +122,8 @@ public class RemoveEmployeeWindow {
     }
 
     private void validateInput(){
-        if(employeeIDField.equals("") || !isNumeric(employeeIDField.getText()))
+
+        if(employeeIDField.getText().isEmpty() || !isNumeric(employeeIDField.getText()) || !employeeService.validateEmployeeID(parseInt(employeeIDField.getText())))
             removeSelectedButton.setEnabled(false);
         else
             removeSelectedButton.setEnabled(true);

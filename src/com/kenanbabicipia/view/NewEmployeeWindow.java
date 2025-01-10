@@ -77,7 +77,7 @@ public class NewEmployeeWindow {
     }
 
     private void validateInput(){
-        if(!nameField.getText().equals("") && !lastNameField.getText().equals("") && !emailField.getText().equals("") && !phoneField.getText().equals("") && !usernameField.getText().equals("") && !passwordField.getText().equals(""))
+        if(!nameField.getText().isEmpty() && !lastNameField.getText().isEmpty() && !emailField.getText().isEmpty() && !phoneField.getText().isEmpty() && !usernameField.getText().isEmpty() && !(new String(passwordField.getPassword()).isEmpty()))
             addEmployeeButton.setEnabled(true);
         else
             addEmployeeButton.setEnabled(false);

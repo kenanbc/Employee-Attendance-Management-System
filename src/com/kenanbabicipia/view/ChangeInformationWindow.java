@@ -42,7 +42,6 @@ public class ChangeInformationWindow {
         lastNameField.getDocument().addDocumentListener(new FormValidationListener());
         emailField.getDocument().addDocumentListener(new FormValidationListener());
         numberField.getDocument().addDocumentListener(new FormValidationListener());
-        usernameField.getDocument().addDocumentListener(new FormValidationListener());
 
         backButton.addActionListener(new ActionListener() {
             @Override
@@ -56,22 +55,25 @@ public class ChangeInformationWindow {
             @Override
             public void actionPerformed(ActionEvent e) {
                 messageLabel.setText("");
-                if(employeeIDField.getText().equals("")){
+                if(employeeIDField.getText().isEmpty()){
                     emptyForm();
                     chanegeStateForm(false);
                     return;
                 }
                 int employeeID = parseInt(employeeIDField.getText());
 
-
                 Employee selectedEmployee = employeeService.selectEmployeeInformation(employeeID);
 
                 if(selectedEmployee != null){
                     fillSelectedFields(selectedEmployee.getEmployeeID());
+                    //messageLabel.setVisible(false);
                 }
                 else{
                     emptyForm();
                     chanegeStateForm(false);
+                    messageLabel.setText("No employee with entered ID!");
+                    Style.setTextColor(messageLabel, Color.GRAY);
+                    messageLabel.setVisible(true);
                 }
             }
         });
@@ -104,6 +106,7 @@ public class ChangeInformationWindow {
         roleOptions.setSelectedItem(selectedEmployee.getRole());
 
         chanegeStateForm(true);
+        usernameField.getDocument().addDocumentListener(new FormValidationListener());
 
     }
 
@@ -161,7 +164,7 @@ public class ChangeInformationWindow {
     }
 
     private void validateInput(){
-        if(!nameField.getText().equals("") && !lastNameField.getText().equals("") && !emailField.getText().equals("") && !numberField.getText().equals("") && !usernameField.getText().equals(""))
+        if(!nameField.getText().isEmpty() && !lastNameField.getText().isEmpty() && !emailField.getText().isEmpty() && !numberField.getText().isEmpty() && !usernameField.getText().isEmpty())
             saveChangesButton.setEnabled(true);
         else
             saveChangesButton.setEnabled(false);
@@ -169,11 +172,13 @@ public class ChangeInformationWindow {
 
     public void validUsername(){
         String username = usernameField.getText();
-        boolean valid = employeeService.validateUsername(username);
+        int employeeID = parseInt(employeeIDField.getText());
+        boolean valid = employeeService.validateUsername(username, employeeID);
         if(valid){
             messageLabel.setText(" ");
         }else{
             messageLabel.setText("Username already in use.");
+            messageLabel.setVisible(true);
             Style.setTextColor(messageLabel, Color.RED);
             saveChangesButton.setEnabled(false);
         }
