@@ -3,6 +3,7 @@ package com.kenanbabicipia.service;
 import com.kenanbabicipia.controller.SQLController;
 import com.kenanbabicipia.model.Request;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,7 +21,7 @@ public class RequestService {
             preparedStatement.setString(2, startDate);
             preparedStatement.setString(3, endDate);
             preparedStatement.setString(4, description);
-            preparedStatement.execute();
+            preparedStatement.executeUpdate();
 
         }catch(SQLException e){
             e.printStackTrace();
@@ -47,6 +48,7 @@ public class RequestService {
     public List<Request> selectEmployeeRequest(int employeeID){
         List<Request> requests = new ArrayList<>();
         String query = "SELECT startDate, endDate, description, status FROM request WHERE employeeID = ? AND STATUS NOT LIKE 'Waiting'";
+
         try{
             PreparedStatement preparedStatementSelect = SQLController.getInstance().getConnection().prepareStatement(query);
             preparedStatementSelect.setInt(1, employeeID);

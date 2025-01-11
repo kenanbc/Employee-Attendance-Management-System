@@ -17,23 +17,17 @@ public class ActivityService {
 
     public boolean addActivitiy(Activity activity) {
         String query = "INSERT INTO activity (employeeID, date, login) VALUES (?, ?, ?)";
-        try {
-            sqlController.connect();
-            int rows = sqlController.executeUpdate(query,
-                    activity.getEmployeeID(),
-                    activity.getDate(),
-                    activity.getLogin()
-            );
+        try{
+            PreparedStatement preparedStatement = SQLController.getInstance().getConnection().prepareStatement(query);
+            preparedStatement.setInt(1, activity.getEmployeeID());
+            preparedStatement.setString(2, activity.getDate());
+            preparedStatement.setTime(3, activity.getLogin());
+
+            int rows = preparedStatement.executeUpdate();
             return rows > 0;
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
-        } finally {
-            try {
-                sqlController.disconnect();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
     }
 
@@ -58,8 +52,7 @@ public class ActivityService {
         List<Activity> activities = new ArrayList<>();
         String query = "SELECT employeeID, date, login, logout, totalWork FROM activity WHERE employeeID = ? ORDER BY activityID DESC";
         try{
-            sqlController.connect();
-            PreparedStatement preparedStatement = sqlController.getConnection().prepareStatement(query);
+            PreparedStatement preparedStatement = SQLController.getInstance().getConnection().prepareStatement(query);
             preparedStatement.setInt(1, employeeID);
             ResultSet resultSet = preparedStatement.executeQuery();
             while(resultSet.next()){
@@ -79,8 +72,7 @@ public class ActivityService {
         if(month.length() == 1) month = "0".concat(month);
         if(month.length() > 2) return null;
         try{
-            sqlController.connect();
-            PreparedStatement preparedStatement = sqlController.getConnection().prepareStatement(query);
+            PreparedStatement preparedStatement = SQLController.getInstance().getConnection().prepareStatement(query);
             preparedStatement.setInt(1, employeeID);
             preparedStatement.setString(2, month);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -103,8 +95,7 @@ public class ActivityService {
         String formattedTime = time.format(DateTimeFormatter.ofPattern("HH:mm:ss"));
 
         try{
-            sqlController.connect();
-            PreparedStatement preparedStatementSelect = sqlController.getConnection().prepareStatement(querySelect);
+            PreparedStatement preparedStatementSelect = SQLController.getInstance().getConnection().prepareStatement(querySelect);
             preparedStatementSelect.setInt(1, employeeID);
             ResultSet resultset = preparedStatementSelect.executeQuery();
             if (resultset.next()) {
@@ -121,11 +112,8 @@ public class ActivityService {
                 preparedStatement.setString(2, totalWork);
                 preparedStatement.setInt(3, employeeID);
 
-            int updated = preparedStatement.executeUpdate();
+                preparedStatement.executeUpdate();
 
-            if(updated > 0){
-                System.out.println("Logout time and total work updated successfully!");
-            }
             }
 
         }catch (SQLException e){

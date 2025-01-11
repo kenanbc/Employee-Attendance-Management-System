@@ -90,7 +90,7 @@ public class EmployeeWindow {
             @Override
             public void windowClosing(WindowEvent e){
                 ActivityService activityService = new ActivityService();
-                Boolean shouldClose = activityService.closingLogOut(employeePanel, employee.getEmployeeID());
+                boolean shouldClose = activityService.closingLogOut(employeePanel, employee.getEmployeeID());
                 if(shouldClose){
                     frame.dispose();
                 }

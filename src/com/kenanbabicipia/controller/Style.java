@@ -4,8 +4,6 @@ import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.plaf.FontUIResource;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -75,7 +73,6 @@ public class Style {
         } else if (component instanceof JTextField) {
             component.setForeground(UIManager.getColor("TableHeader.foreground"));
         }
-
 
         if (component instanceof Container) {
             for (Component child : ((Container) component).getComponents()) {

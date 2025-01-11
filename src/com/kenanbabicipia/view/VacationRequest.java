@@ -49,7 +49,7 @@ public class VacationRequest {
                     successLabel.setVisible(true);
                     return;
                 }
-                String description = descriptionField.getText().length() > 0 ? descriptionField.getText() : null;
+                String description = !descriptionField.getText().isEmpty() ? descriptionField.getText() : null;
                 requestService.insertNewRequest(employee.getEmployeeID(), startDate, endDate, description);
                 successLabel.setText("Vacation request successfully created.");
                 successLabel.setVisible(true);

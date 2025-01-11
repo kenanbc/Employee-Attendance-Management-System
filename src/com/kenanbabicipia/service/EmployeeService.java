@@ -16,11 +16,12 @@ public class EmployeeService {
     public Employee verifyLogIn(String username, String password) throws SQLException{
 
         Connection connection = SQLController.getInstance().getConnection();
-        String sql = "SELECT employeeID, firstName, lastName, email, phoneNumber, role, username, password FROM employee WHERE username = ?";
+        String query = "SELECT employeeID, firstName, lastName, email, phoneNumber, role, username, password FROM employee WHERE username = ?";
 
-        try(PreparedStatement query = connection.prepareStatement(sql)){
-            query.setString(1, username);
-            ResultSet resultSet = query.executeQuery();
+        try{
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, username);
+            ResultSet resultSet = preparedStatement.executeQuery();
 
             if(resultSet.next()){
                 String dbPassword = resultSet.getString("password");
@@ -32,22 +33,24 @@ public class EmployeeService {
             }
             else
                 return null;
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+        return null;
     }
 
     public boolean addEmployee(Employee employee) {
         String query = "INSERT INTO employee (firstName, lastName, email, phoneNumber, role, username, password) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        try {
-            SQLController sqlController = SQLController.getInstance();
-            int rows = sqlController.executeUpdate(query,
-                    employee.getFirstName(),
-                    employee.getLastName(),
-                    employee.getEmail(),
-                    employee.getPhoneNumber(),
-                    employee.getRole(),
-                    employee.getUsername(),
-                    employee.getPassword()
-                    );
+        try{
+            PreparedStatement preparedStatement = SQLController.getInstance().getConnection().prepareStatement(query);
+            preparedStatement.setString(1, employee.getFirstName());
+            preparedStatement.setString(2, employee.getLastName());
+            preparedStatement.setString(3, employee.getEmail());
+            preparedStatement.setString(4, employee.getPhoneNumber());
+            preparedStatement.setString(5, employee.getRole());
+            preparedStatement.setString(6, employee.getUsername());
+            preparedStatement.setString(7, employee.getPassword());
+            int rows = preparedStatement.executeUpdate();
             return rows > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -164,10 +167,7 @@ public class EmployeeService {
             preparedStatement.setInt(1, employeeID);
             int rows = preparedStatement.executeUpdate();
 
-            if(rows > 0)
-                return true;
-            else
-                return false;
+            return rows > 0;
         } catch (SQLException e){
             e.printStackTrace();
         }
