@@ -11,10 +11,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.util.List;
 
 public class RequestWindow {
@@ -27,7 +24,6 @@ public class RequestWindow {
     EmployeeService employeeService = new EmployeeService();
 
     public RequestWindow(Employee employee){
-
         fillTable();
         backButton.addActionListener(new ActionListener() {
             @Override
@@ -49,7 +45,7 @@ public class RequestWindow {
 
         DefaultTableModel model = (DefaultTableModel) requestTable.getModel();
         model.setColumnIdentifiers(new Object[]{"Request ID","Employee", "Start Date", "End Date", "Description", "Actions"});
-        requestTable.setRowHeight(80);
+        requestTable.setRowHeight(50);
         List<Request> requests = requestService.selectWaitingRequest();
 
         for(Request request : requests){
@@ -95,25 +91,34 @@ public class RequestWindow {
 
     /********************************/
     class ButtonRenderer extends JPanel implements TableCellRenderer {
-        private final JButton approveButton = new JButton("Approve");
-        private final JButton denyButton = new JButton("Deny");
+        private final JButton approveButton = new JButton("✔");
+        private final JButton denyButton = new JButton("⛔");
 
         public ButtonRenderer() {
             setLayout(new FlowLayout(FlowLayout.CENTER));
             add(approveButton);
             add(denyButton);
+
+            Style.setButtonStyle(approveButton);
+            this.revalidate();
+            this.repaint();
+
+            approveButton.setFocusPainted(false);
+            denyButton.setFocusPainted(false);
+            this.setFocusable(false);
         }
 
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             return this;
         }
+
     }
 
     class ButtonEditor extends DefaultCellEditor {
         private final JPanel panel = new JPanel();
-        private final JButton approveButton = new JButton("Approve");
-        private final JButton denyButton = new JButton("Deny");
+        private final JButton approveButton = new JButton("✔");
+        private final JButton denyButton = new JButton("⛔");
 
         private RequestService requestService;
 
@@ -121,10 +126,17 @@ public class RequestWindow {
             super(checkBox);
             this.requestService = requestService;
 
-
             panel.setLayout(new FlowLayout(FlowLayout.CENTER));
             panel.add(approveButton);
             panel.add(denyButton);
+
+            panel.setFocusable(false);
+
+            approveButton.setFocusPainted(false);
+            denyButton.setFocusPainted(false);
+
+            Style.setButtonStyle();
+            Style.resetColors(panel);
 
             approveButton.addActionListener(e -> {
                 fireEditingStopped();
@@ -140,7 +152,6 @@ public class RequestWindow {
             int row = requestTable.getSelectedRow();
             if (row >= 0) {
                 int requestID = (int) requestTable.getValueAt(row, 0);
-                System.out.println("requestID" + requestID);
                 if (action.equals("Approved")) {
                     requestService.approveRequest(requestID);
                 } else {

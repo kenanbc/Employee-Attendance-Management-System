@@ -59,7 +59,7 @@ public class Style {
         label.setFont(iconFont);
     }
 
-    private static void resetColors(Component component) {
+    public static void resetColors(Component component) {
         if (component instanceof JLabel) {
             component.setForeground(UIManager.getColor("Label.foreground"));
         } else if (component instanceof JButton) {
@@ -137,5 +137,19 @@ public class Style {
         UIManager.put("Table.alternateRowColor", Color.decode("#777777"));
         UIManager.put("Table.rowHeight", 30);
         UIManager.put("Table.showVerticalLines", true);
+    }
+
+    public static void setButtonStyle(){
+        UIManager.put( "Button.arc", 999 );
+        UIManager.put("Button.borderWidth", 2);
+        UIManager.put("Button.margin", new Insets(5, 7, 5, 7));
+        UIManager.put("Button.focusedBorderColor", Color.TRANSLUCENT);
+    }
+
+    public static void setButtonStyle(JButton button){
+        UIManager.put( "Button.arc", 999 );
+        UIManager.put("Button.borderWidth", 2);
+        UIManager.put("Button.margin", new Insets(5, 7, 5, 7));
+        UIManager.put("Button.focusedBorderColor", Color.TRANSLUCENT);
     }
 }
